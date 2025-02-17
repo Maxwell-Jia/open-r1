@@ -176,5 +176,6 @@ wandb/
 logs/
 eval_results/
 results/
+pretrained/
 
 .vscode/

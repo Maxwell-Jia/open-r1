@@ -57,6 +57,7 @@ from trl import (
     get_kbit_device_map,
     get_peft_config,
     get_quantization_config,
+    DataCollatorForCompletionOnlyLM,
 )
 
 
@@ -112,7 +113,27 @@ def main(script_args, training_args, model_args):
     tokenizer = AutoTokenizer.from_pretrained(
         model_args.model_name_or_path, trust_remote_code=model_args.trust_remote_code, use_fast=True
     )
-    tokenizer.pad_token = tokenizer.eos_token
+    # tokenizer.pad_token = tokenizer.eos_token
+    if "Llama" in model_args.model_name_or_path:
+        instruction_template = "<|start_header_id|>user<|end_header_id|>"
+        response_template = "<|start_header_id|>assistant<|end_header_id|>\n\n"
+        # Use a token that is never used
+        tokenizer.pad_token = "<|reserved_special_token_5|>"
+    elif "Qwen" in model_args.model_name_or_path:
+        instruction_template = "<|im_start|>user"
+        response_template = "<|im_start|>assistant\n"
+        # Use a token that is never used
+        tokenizer.pad_token = "<|fim_pad|>"
+
+    # Only compute loss over assistant responses
+    # Verified that it precisely starts where the thinking tokens start and ends with the first pad token
+    # via labels being set to -100
+    collator = DataCollatorForCompletionOnlyLM(
+        instruction_template=instruction_template,
+        response_template=response_template,
+        tokenizer=tokenizer,
+        mlm=False
+    )
 
     ###################
     # Model init kwargs
@@ -144,6 +165,7 @@ def main(script_args, training_args, model_args):
         processing_class=tokenizer,
         peft_config=get_peft_config(model_args),
         callbacks=get_callbacks(training_args, model_args),
+        data_collator=collator,
     )
 
     ###############
