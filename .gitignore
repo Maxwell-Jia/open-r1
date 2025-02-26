@@ -177,5 +177,6 @@ logs/
 eval_results/
 results/
 pretrained/
+nohup.out
 
 .vscode/
