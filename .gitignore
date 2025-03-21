@@ -180,3 +180,4 @@ pretrained/
 nohup.out
 
 .vscode/
+.idea/
