@@ -180,3 +180,5 @@ pretrained/
 nohup.out
 
 .vscode/
+.idea/
+src/open_r1/api_evaluate/results/
