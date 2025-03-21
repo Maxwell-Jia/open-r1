@@ -1,7 +1,7 @@
 ## 背景
 lighteval仅仅支持openai的model调用，但是不支持普通restful api调用
 而目前Astro One + RAG模式, 只能提供restful api接口，所以对lighteval进行
-是培训代码改造
+是适配代码改造
 ## 方法
 1、继承LightevalModel，实现CustomAPIMLModel，重点重写**greedy_until**方法
 Astro One + RAG模式仅仅只能支持流式输出，所以Post调用方法有点特殊，可以改写

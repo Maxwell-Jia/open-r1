@@ -18,7 +18,7 @@ evaluation_tracker = EvaluationTracker(
 pipeline_params = PipelineParameters(
     launcher_type=ParallelismManager.NONE,
     override_batch_size=1,
-    max_samples=3,  # 可根据需求调整
+    max_samples=50,  # 可根据需求调整
     custom_tasks_directory="../evaluate_astro.py"
 )
 
